@@ -140,14 +140,15 @@ fn sum_adjacent_numbers(grid: &mut Grid) -> i32 {
             let p = Point::new(x as i32, y as i32);
             let node = &grid[p];
 
-            if matches!(node.value, b'0'..=b'9' | b'.') {
+            if node.value != b'*' {
                 x += 1;
                 continue;
             }
 
-            // the value is a special char
+            // the value is a gear
 
             // check the adjacent points
+            let mut gears = vec![];
             for mut new_p in [
                 p + UP_LEFT,
                 p + UP,
@@ -197,7 +198,11 @@ fn sum_adjacent_numbers(grid: &mut Grid) -> i32 {
                     s.push(node.value as char);
                     node.visited = true;
                 }
-                sum += s.parse::<i32>().unwrap();
+                gears.push(s.parse::<i32>().unwrap());
+            }
+
+            if gears.len() == 2 {
+                sum += gears[0] * gears[1];
             }
 
             x += 1;
